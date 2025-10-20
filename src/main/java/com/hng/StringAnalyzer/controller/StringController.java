@@ -36,7 +36,7 @@ public class StringController {
             properties.put("unique_characters", stringEntity.getUniqueCharacters());
             properties.put("word_count", stringEntity.getWordCount());
             properties.put("sha256_hash", stringEntity.getId());
-            properties.put("character_frequency_map", stringEntity.getCharacterFrequencyMap());
+            properties.put("character_frequency_map", analyzerService.preserveOrder(stringEntity.getValue(), stringEntity.getCharacterFrequencyMap()));
 
             AnalyzerResponse response = new AnalyzerResponse();
             response.setId(stringEntity.getId());

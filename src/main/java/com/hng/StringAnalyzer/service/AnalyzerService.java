@@ -78,4 +78,14 @@ public class AnalyzerService {
         }
         return freq;
     }
+
+    public Map<Character, Integer> preserveOrder(String text, Map<Character, Integer> storedMap) {
+        Map<Character, Integer> ordered = new LinkedHashMap<>();
+        for (char c : text.toCharArray()) {
+            if (!ordered.containsKey(c) && storedMap.containsKey(c)) {
+                ordered.put(c, storedMap.get(c));
+            }
+        }
+        return ordered;
+    }
 }
