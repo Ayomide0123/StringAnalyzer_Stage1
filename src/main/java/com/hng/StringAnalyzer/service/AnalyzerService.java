@@ -44,6 +44,16 @@ public class AnalyzerService {
         return stringRepository.save(stringEntity);
     }
 
+    public StringEntity findByValue(String value) throws Exception {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException("Missing or epmty string value");
+        }
+
+        String hash = computeSha256(value);
+        return stringRepository.findById(hash)
+                .orElseThrow(() -> new NoSuchElementException("String not found"));
+    }
+
     private String computeSha256(String text) throws Exception {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] hashBytes = digest.digest(text.getBytes(StandardCharsets.UTF_8));
