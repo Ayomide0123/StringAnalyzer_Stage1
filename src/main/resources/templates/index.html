@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>String Analyzer API</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            margin: 0;
+            background: #1a1a1a;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        header {
+            background: #242424;
+            padding: 2rem 1rem;
+            text-align: center;
+            border-bottom: 1px solid #333;
+        }
+
+        h1 {
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            color: #999;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        h2 {
+            color: #ffffff;
+            margin-top: 2rem;
+        }
+
+        pre, code {
+            background: #0d0d0d;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 0.5rem;
+            display: inline-block;
+        }
+
+        pre {
+            overflow-x: auto;
+            padding: 1rem;
+            width: 100%;
+        }
+
+        section {
+            margin-bottom: 2rem;
+        }
+
+        ul {
+            color: #ccc;
+        }
+
+        strong {
+            color: #4a9eff;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h1>String Analyzer API</h1>
+    <p>A RESTful service for analyzing strings and storing their computed properties.</p>
+</header>
+
+<main>
+    <section>
+        <h2>Overview</h2>
+        <p>This API allows you to submit strings for analysis and retrieve computed properties such as:</p>
+        <ul>
+            <li>Length</li>
+            <li>Palindrome check</li>
+            <li>Unique characters</li>
+            <li>Word count</li>
+            <li>SHA-256 hash</li>
+            <li>Character frequency map</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Available Endpoints</h2>
+        <ul>
+            <li><strong>POST /strings</strong> – Analyze and store a new string</li>
+            <li><strong>GET /strings/{string_value}</strong> – Retrieve analysis for a specific string</li>
+            <li><strong>GET /strings</strong> – Get all strings (with optional filters)</li>
+            <li><strong>GET /strings/filter-by-natural-language</strong> – Use natural language to filter results</li>
+            <li><strong>DELETE /strings/{string_value}</strong> – Remove a string from the database</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>Example Request</h2>
+        <p><strong>POST /strings</strong></p>
+        <pre>{
+  "value": "Hello world"
+}</pre>
+
+        <p><strong>Response:</strong></p>
+        <pre>{
+  "id": "64ec88ca00b268e5...",
+  "value": "Hello world",
+  "properties": {
+    "length": 11,
+    "is_palindrome": false,
+    "unique_characters": 8,
+    "word_count": 2,
+    "sha256_hash": "64ec88ca00b268e5...",
+    "character_frequency_map": {
+      "H": 1, "e": 1, "l": 3, "o": 2, " ": 1, "w": 1, "r": 1, "d": 1
+    }
+  },
+  "created_at": "2025-10-20T21:51:25.07"
+}</pre>
+    </section>
+</main>
+</body>
+</html>
