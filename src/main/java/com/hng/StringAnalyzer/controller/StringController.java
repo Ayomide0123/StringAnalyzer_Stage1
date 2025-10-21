@@ -137,4 +137,13 @@ public class StringController {
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(Map.of("error", e.getMessage()));
         }
     }
+
+    @DeleteMapping("/{string_value}")
+    public ResponseEntity<Void> deleteString(@PathVariable String string_value) throws Exception {
+        boolean deleted = analyzerService.deleteString(string_value);
+        if (!deleted) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.noContent().build();
+    }
 }

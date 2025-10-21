@@ -192,4 +192,13 @@ public class AnalyzerService {
 
         return stream.collect(Collectors.toList());
     }
+
+    public boolean deleteString(String value) throws Exception {
+        String hash = computeSha256(value);
+        if (stringRepository.existsById(hash)) {
+            stringRepository.deleteById(hash);
+            return true;
+        }
+        return false;
+    }
 }
