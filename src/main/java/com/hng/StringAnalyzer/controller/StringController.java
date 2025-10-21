@@ -20,7 +20,7 @@ import java.util.NoSuchElementException;
 public class StringController {
 
     private final AnalyzerService analyzerService;
-    private HelperMethods helperMethods;
+    private final HelperMethods helperMethods;
 
     public StringController(AnalyzerService analyzerService, HelperMethods helperMethods) {
         this.analyzerService = analyzerService;
