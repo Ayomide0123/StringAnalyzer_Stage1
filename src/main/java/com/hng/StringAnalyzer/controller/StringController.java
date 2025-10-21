@@ -29,6 +29,7 @@ public class StringController {
 
     @PostMapping
     public ResponseEntity<?> analyzeString(@RequestBody StringDto request) {
+
         try {
             StringEntity stringEntity = analyzerService.analyzeAndSave(request);
 
