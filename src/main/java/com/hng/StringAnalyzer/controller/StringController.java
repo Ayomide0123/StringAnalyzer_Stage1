@@ -74,8 +74,39 @@ public class StringController {
             return ResponseEntity.ok(response);
         } catch (NoSuchElementException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "String does not exist in the system"));
-    } catch (Exception e) {
+        } catch (Exception e) {
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(Map.of("error", "Unprocessable entity"));
+        }
     }
-}
+
+
+    @GetMapping
+    public ResponseEntity<?> getAllStrings(
+            @RequestParam(required = false) Boolean is_palindrome,
+            @RequestParam(required = false) Integer min_length,
+            @RequestParam(required = false) Integer max_length,
+            @RequestParam(required = false) Integer word_count,
+            @RequestParam(required = false) String contains_character
+    ) {
+      try {
+          var results = analyzerService.getAllStringsFiltered(is_palindrome, min_length, max_length, word_count, contains_character);
+
+          Map<String, Object> response = new LinkedHashMap<>();
+          response.put("data", results.get("data"));
+          response.put("count", results.get("count"));
+
+          Map<String, Object> filtersApplied = new LinkedHashMap<>();
+          if (is_palindrome !=null) filtersApplied.put("is_palindrome", is_palindrome);
+          if (min_length !=null) filtersApplied.put("min_length", min_length);
+          if (max_length !=null) filtersApplied.put("max_length", max_length);
+          if (word_count !=null) filtersApplied.put("word_count", word_count);
+          if (contains_character !=null) filtersApplied.put("contains_character", contains_character);
+
+          return ResponseEntity.ok(response);
+      } catch (IllegalArgumentException e) {
+          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+      } catch (Exception e) {
+          return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(Map.of("error", "Unprocessable entity"));
+      }
+    }
 }
