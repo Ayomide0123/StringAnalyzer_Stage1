@@ -10,11 +10,16 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
 public class AnalyzerService {
     private final StringRepository stringRepository;
+
+    public List<StringEntity> getAllStrings() {
+        return stringRepository.findAll();
+    }
 
     public AnalyzerService(StringRepository stringRepository) {
         this.stringRepository = stringRepository;
@@ -159,5 +164,32 @@ public class AnalyzerService {
         result.put("count", dataList.size());
 
         return result;
+    }
+
+    public List<StringEntity> filterStrings(Map<String, Object> filters) {
+        Stream<StringEntity> stream = getAllStrings().stream();
+
+        if (filters.containsKey("is_palindrome")) {
+            boolean isPalindrome = (boolean) filters.get("is_palindrome");
+            stream = stream.filter(s -> s.isPalindrome() == isPalindrome);
+        }
+        if (filters.containsKey("min_length")) {
+            int min = (int) filters.get("min_length");
+            stream = stream.filter(s -> s.getLength() >= min);
+        }
+        if (filters.containsKey("max_length")) {
+            int max = (int) filters.get("max_length");
+            stream = stream.filter(s -> s.getLength() >= max);
+        }
+        if (filters.containsKey("word_count")) {
+            int wc = (int) filters.get("word_count");
+            stream = stream.filter(s -> s.getWordCount() == wc);
+        }
+        if (filters.containsKey("contains_character")) {
+            String ch = filters.get("contains_character").toString();
+            stream = stream.filter(s -> s.getValue().contains(ch));
+        }
+
+        return stream.collect(Collectors.toList());
     }
 }

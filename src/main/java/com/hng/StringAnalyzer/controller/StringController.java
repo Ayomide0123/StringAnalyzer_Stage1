@@ -4,12 +4,14 @@ import com.hng.StringAnalyzer.dto.AnalyzerResponse;
 import com.hng.StringAnalyzer.dto.StringDto;
 import com.hng.StringAnalyzer.model.StringEntity;
 import com.hng.StringAnalyzer.service.AnalyzerService;
+import com.hng.StringAnalyzer.utils.HelperMethods;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
@@ -18,9 +20,11 @@ import java.util.NoSuchElementException;
 public class StringController {
 
     private final AnalyzerService analyzerService;
+    private HelperMethods helperMethods;
 
-    public StringController(AnalyzerService analyzerService) {
+    public StringController(AnalyzerService analyzerService, HelperMethods helperMethods) {
         this.analyzerService = analyzerService;
+        this.helperMethods = helperMethods;
     }
 
     @PostMapping
@@ -108,5 +112,29 @@ public class StringController {
       } catch (Exception e) {
           return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(Map.of("error", "Unprocessable entity"));
       }
+    }
+
+
+    @GetMapping("/filter-by-natural-language")
+    public ResponseEntity<?> filterByNaturalLanguage(@RequestParam String query) {
+        try {
+            Map<String, Object> parsedFilters = helperMethods.parseNaturalLanguage(query);
+
+            List<StringEntity> results = analyzerService.filterStrings(parsedFilters);
+
+            Map<String, Object> response = new LinkedHashMap<>();
+            response.put("data", results);
+            response.put("count", results.size());
+            response.put("interpreted_query", Map.of(
+                    "original", query,
+                    "parsed_filters", parsedFilters
+            ));
+
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(Map.of("error", e.getMessage()));
+        }
     }
 }
