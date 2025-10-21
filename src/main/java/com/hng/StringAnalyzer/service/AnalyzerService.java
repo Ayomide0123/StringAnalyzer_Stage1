@@ -110,11 +110,11 @@ public class AnalyzerService {
             Integer minLength,
             Integer maxLength,
             Integer wordCount,
-            String containersCharacter
+            String containsCharacter
     ) {
         List<StringEntity> all = stringRepository.findAll();
 
-        if (containersCharacter != null && containersCharacter.length() != 1) {
+        if (containsCharacter != null && containsCharacter.length() != 1) {
             throw new IllegalArgumentException("contains_character must be a single character");
         }
 
@@ -136,8 +136,8 @@ public class AnalyzerService {
             stream = stream.filter(s ->s.getWordCount() == wordCount);
         }
 
-        if (containersCharacter != null) {
-            char ch = containersCharacter.charAt(0);
+        if (containsCharacter != null) {
+            char ch = containsCharacter.charAt(0);
             stream = stream.filter(s ->s.getValue().indexOf(ch) != -1);
         }
 

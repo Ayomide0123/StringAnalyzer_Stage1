@@ -106,10 +106,11 @@ public class StringController {
           if (max_length !=null) filtersApplied.put("max_length", max_length);
           if (word_count !=null) filtersApplied.put("word_count", word_count);
           if (contains_character !=null) filtersApplied.put("contains_character", contains_character);
+          response.put("filters_applied", filtersApplied);
 
           return ResponseEntity.ok(response);
       } catch (IllegalArgumentException e) {
-          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+          return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Invalid query parameter values or types"));
       } catch (Exception e) {
           return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(Map.of("error", "Unprocessable entity"));
       }
@@ -140,10 +141,10 @@ public class StringController {
     }
 
     @DeleteMapping("/{string_value}")
-    public ResponseEntity<Void> deleteString(@PathVariable String string_value) throws Exception {
+    public ResponseEntity<Map<String, String>> deleteString(@PathVariable String string_value) throws Exception {
         boolean deleted = analyzerService.deleteString(string_value);
         if (!deleted) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "String does not exist in the system"));
         }
         return ResponseEntity.noContent().build();
     }
